@@ -43,7 +43,11 @@ function AuthPage() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     navigate({ to: "/services", replace: true });
   }
 
@@ -56,7 +60,11 @@ function AuthPage() {
       options: { emailRedirectTo: window.location.origin },
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     if (data.session) {
       navigate({ to: "/services", replace: true });
     } else {
