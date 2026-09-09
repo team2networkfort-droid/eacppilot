@@ -14,16 +14,307 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          event_type: string
+          evidence_source_id: string | null
+          id: string
+          ingested_at: string
+          occurred_at: string
+          raw_payload: Json
+          service_id: string
+          source_type: Database["public"]["Enums"]["source_type"]
+        }
+        Insert: {
+          event_type: string
+          evidence_source_id?: string | null
+          id?: string
+          ingested_at?: string
+          occurred_at?: string
+          raw_payload?: Json
+          service_id: string
+          source_type: Database["public"]["Enums"]["source_type"]
+        }
+        Update: {
+          event_type?: string
+          evidence_source_id?: string | null
+          id?: string
+          ingested_at?: string
+          occurred_at?: string
+          raw_payload?: Json
+          service_id?: string
+          source_type?: Database["public"]["Enums"]["source_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_evidence_source_id_fkey"
+            columns: ["evidence_source_id"]
+            isOneToOne: false
+            referencedRelation: "evidence_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evidence_sources: {
+        Row: {
+          config: Json
+          created_at: string
+          id: string
+          service_id: string
+          source_type: Database["public"]["Enums"]["source_type"]
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          id?: string
+          service_id: string
+          source_type: Database["public"]["Enums"]["source_type"]
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          id?: string
+          service_id?: string
+          source_type?: Database["public"]["Enums"]["source_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_sources_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_timelines: {
+        Row: {
+          correlation_confidence: number | null
+          created_at: string
+          event_id: string | null
+          id: string
+          incident_id: string
+          notes: string | null
+          sequence_order: number
+        }
+        Insert: {
+          correlation_confidence?: number | null
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          incident_id: string
+          notes?: string | null
+          sequence_order?: number
+        }
+        Update: {
+          correlation_confidence?: number | null
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          incident_id?: string
+          notes?: string | null
+          sequence_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_timelines_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incident_timelines_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          resolved_at: string | null
+          service_id: string
+          started_at: string
+          status: Database["public"]["Enums"]["incident_status"]
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          resolved_at?: string | null
+          service_id: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["incident_status"]
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          resolved_at?: string | null
+          service_id?: string
+          started_at?: string
+          status?: Database["public"]["Enums"]["incident_status"]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incidents_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      investigation_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          evidence_items_found: number
+          id: string
+          incident_id: string
+          maintenance_effort_notes: string | null
+          method: Database["public"]["Enums"]["investigation_method"]
+          setup_effort_notes: string | null
+          started_at: string
+          time_to_reconstruct_minutes: number | null
+          unresolved_connections: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          evidence_items_found?: number
+          id?: string
+          incident_id: string
+          maintenance_effort_notes?: string | null
+          method: Database["public"]["Enums"]["investigation_method"]
+          setup_effort_notes?: string | null
+          started_at?: string
+          time_to_reconstruct_minutes?: number | null
+          unresolved_connections?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          evidence_items_found?: number
+          id?: string
+          incident_id?: string
+          maintenance_effort_notes?: string | null
+          method?: Database["public"]["Enums"]["investigation_method"]
+          setup_effort_notes?: string | null
+          started_at?: string
+          time_to_reconstruct_minutes?: number | null
+          unresolved_connections?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_runs_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string
+          description: string | null
+          environment: Database["public"]["Enums"]["environment_type"]
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          environment?: Database["public"]["Enums"]["environment_type"]
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          environment?: Database["public"]["Enums"]["environment_type"]
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "investigator"
+      environment_type: "staging" | "prod"
+      incident_status: "open" | "investigating" | "resolved"
+      investigation_method: "eacp" | "manual"
+      source_type: "github_actions" | "kubernetes"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +441,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["investigator"],
+      environment_type: ["staging", "prod"],
+      incident_status: ["open", "investigating", "resolved"],
+      investigation_method: ["eacp", "manual"],
+      source_type: ["github_actions", "kubernetes"],
+    },
   },
 } as const
